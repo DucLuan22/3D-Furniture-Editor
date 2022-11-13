@@ -2,6 +2,7 @@ import React, { Suspense, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { addModel } from "../../slice/modelSlice";
 import { angleToRadians } from "../../utils/angleToRadians";
+import Loader from "./Loader";
 
 function ItemModel({ model }) {
   const ref = useRef();
@@ -10,7 +11,7 @@ function ItemModel({ model }) {
   // useFrame((state, delta) => (ref.current.rotation.y += 0.01));
   const Model = require(`../../models/${model}`).default;
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Loader />}>
       <mesh
         ref={ref}
         onClick={() =>

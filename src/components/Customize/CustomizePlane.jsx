@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { OrbitControls, OrthographicCamera, Plane } from "@react-three/drei";
-import { useContext } from "react";
 import * as THREE from "three";
 import { angleToRadians } from "../../utils/angleToRadians";
 import { useSelector } from "react-redux";
