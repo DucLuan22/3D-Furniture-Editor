@@ -8,12 +8,13 @@ import Obj from "./Obj";
 function CustomizePlane() {
   const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
   const [isDragging, setDragging] = useState(false);
+  const { roomSize, lightLevel } = useSelector((state) => state.environment);
   const { models } = useSelector((state) => state.models);
   return (
     <>
-      <ambientLight intensity={1.0} />
+      <ambientLight intensity={lightLevel.ambient} />
       <directionalLight
-        intensity={0.9}
+        intensity={lightLevel.directional}
         castShadow
         shadow-mapSize-height={300}
         shadow-mapSize-width={300}
@@ -25,25 +26,37 @@ function CustomizePlane() {
         receiveShadow
       ></mesh>
 
-      <mesh position={[10, 3.5, 0]} rotation={[0, -angleToRadians(90), 0]}>
-        <Plane args={[20, 7, 3]} />
+      <mesh
+        position={[roomSize.x / 2, 3.5, 0]}
+        rotation={[0, -angleToRadians(90), 0]}
+      >
+        <Plane args={[roomSize.x, 7, 3]} />
       </mesh>
 
-      <mesh position={[-10, 3.5, 0]} rotation={[0, angleToRadians(90), 0]}>
-        <Plane args={[20, 7, 3]} />
+      <mesh
+        position={[-roomSize.x / 2, 3.5, 0]}
+        rotation={[0, angleToRadians(90), 0]}
+      >
+        <Plane args={[roomSize.x, 7, 3]} />
       </mesh>
 
-      <mesh position={[0, 3.5, 10]} rotation={[0, angleToRadians(180), 0]}>
-        <Plane args={[20, 7, 3]} />
+      <mesh
+        position={[0, 3.5, roomSize.x / 2]}
+        rotation={[0, angleToRadians(180), 0]}
+      >
+        <Plane args={[roomSize.x, 7, 3]} />
       </mesh>
 
-      <mesh position={[0, 3.5, -10]} rotation={[0, angleToRadians(0), 0]}>
-        <Plane args={[20, 7, 3]} />
+      <mesh
+        position={[0, 3.5, -roomSize.x / 2]}
+        rotation={[0, angleToRadians(0), 0]}
+      >
+        <Plane args={[roomSize.x, 7, 3]} />
       </mesh>
 
       <planeHelper args={[floorPlane, 1, "red"]} />
 
-      <gridHelper args={[20, 20, "white"]} />
+      <gridHelper args={[roomSize.x, roomSize.grid]} />
 
       {models.map((model) => (
         <Obj
@@ -55,6 +68,7 @@ function CustomizePlane() {
           position={model.position}
           rotation={model.rotation}
           scale={model.scale}
+          receiveShadow
         />
       ))}
 
@@ -62,7 +76,7 @@ function CustomizePlane() {
 
       <OrbitControls
         minZoom={10}
-        maxZoom={50}
+        maxZoom={100}
         enabled={!isDragging}
         maxPolarAngle={angleToRadians(80)}
         minPolarAngle={angleToRadians(30)}

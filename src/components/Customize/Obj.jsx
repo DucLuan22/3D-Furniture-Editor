@@ -23,7 +23,7 @@ function Obj({
   const [pos, setPos] = useState(position);
   const [rot, setRot] = useState(rotation);
   const dispatch = useDispatch();
-  const { isDeleteMode, isDragMode, isRotateMode } = useSelector(
+  const { isDeleteMode, isDragMode, isRotateMode, isLiftMode } = useSelector(
     (state) => state.customize
   );
 
@@ -47,8 +47,20 @@ function Obj({
           scale: 1,
           // rotation: [0, x / aspect, 0],
         });
-        setMovement(x);
       }
+
+      // if (active && isLiftMode) {
+      //   event.ray.intersectPlane(floorPlane, planeIntersectPoint);
+      //   setPos([planeIntersectPoint.x, 0, planeIntersectPoint.z]);
+      //   api.start({
+      //     // position: active ? [x / aspect, -y / aspect, 0] : [0, 0, 0],
+      //     position: pos,
+      //     scale: 1,
+      //     // rotation: [0, x / aspect, 0],
+      //   });
+      //   console.log(planeIntersectPoint);
+      // }
+
       if (active && isRotateMode) {
         setMovement(x);
         setRot([0, movement / (1.2 * aspect), 0]);
@@ -60,6 +72,7 @@ function Obj({
       if (isDeleteMode) {
         dispatch(removeModel(id));
       }
+
       if (!active) {
         dispatch(updateModelPosAndRot({ id, position: pos, rotation: rot }));
       }
@@ -71,7 +84,7 @@ function Obj({
 
   return (
     <animated.mesh {...spring} {...bind()} castShadow>
-      <Object scale={scale} />
+      <Object scale={scale} recieveShadow />
     </animated.mesh>
   );
 }

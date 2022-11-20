@@ -9,9 +9,11 @@ import {
 import { TfiSave } from "react-icons/tfi";
 import { FiRotateCcw } from "react-icons/fi";
 import { FaMousePointer } from "react-icons/fa";
+import { BsArrowBarUp } from "react-icons/bs";
 import {
   setDeleteMode,
   setDragMode,
+  setLiftMode,
   setRotateMode,
 } from "../../slice/customizeSlice";
 import MenuComponent from "./MenuComponent";
@@ -35,17 +37,28 @@ import {
 } from "../../slice/modelSlice";
 import SaveFile from "./SaveFile";
 import { Tooltip } from "flowbite-react";
+import {
+  setLightIntensity,
+  setRoomCoordinate,
+} from "../../slice/environmentSlice";
+import GridModifier from "./GridModifier";
+import LightSettings from "./LightSettings";
 
 function SidePanel() {
   const [isFurniture, setIsFurniture] = useState(true);
   const [roomSize, setRoomSize] = useState({
-    x: 5,
-    y: 5,
+    x: 15,
+    grid: 10,
   });
+
   const [isSave, setIsSave] = useState(false);
   const [isOptions, setOptions] = useState(false);
   const [isPanel, setPanel] = useState(true);
   const [models, setModels] = useState([]);
+  const [lightLevel, setLightLevel] = useState({
+    ambient: 1,
+    directional: 1,
+  });
   const dispatch = useDispatch();
   const { isLogin, loggedUser } = useSelector((state) => state.auth);
   const modelList = useSelector((state) => state.models);
@@ -153,6 +166,16 @@ function SidePanel() {
       ...prevState,
       [name]: parseInt(value),
     }));
+    dispatch(setRoomCoordinate(roomSize));
+  };
+
+  const handlingLightLevel = (e) => {
+    const { value, name } = e.target;
+    setLightLevel((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+    dispatch(setLightIntensity(lightLevel));
   };
   return (
     <section
@@ -232,6 +255,15 @@ function SidePanel() {
                 <FiRotateCcw onClick={() => dispatch(setRotateMode())} />
               </Tooltip>
             </span>
+            <span
+              className={`text-3xl bg-gray-800  hover:bg-slate-600 p-2 text-white rounded-full ${
+                isRotateMode && "bg-slate-600"
+              }`}
+            >
+              <Tooltip content="Lift Mode">
+                <BsArrowBarUp onClick={() => dispatch(setLiftMode())} />
+              </Tooltip>
+            </span>
           </section>
         </div>
       )}
@@ -257,37 +289,15 @@ function SidePanel() {
       )}
       {isOptions && (
         <section className={`flex flex-col gap-9 ${!isPanel && "hidden"}`}>
-          <div className="w-full ml-6">
-            <span className="text-white text-lg font-semibold">Room Size:</span>
-            <Tooltip content={roomSize.x}>
-              <div className="flex items-center gap-3">
-                <span className="font-semibold text-xl text-white">X </span>
-                <input
-                  type="range"
-                  className=" w-[250px] sm:w-[380px] "
-                  name="x"
-                  value={roomSize.x}
-                  min={5}
-                  max={50}
-                  onChange={handlingRoomResize}
-                />
-              </div>
-            </Tooltip>
-            <Tooltip content={roomSize.y}>
-              <div className="flex items-center gap-3 mt-3">
-                <span className="font-semibold text-xl text-white">Y </span>
-                <input
-                  type="range"
-                  name="y"
-                  value={roomSize.y}
-                  className=" w-[250px] sm:w-[380px]"
-                  min={5}
-                  max={50}
-                  onChange={handlingRoomResize}
-                />
-              </div>
-            </Tooltip>
-          </div>
+          <GridModifier
+            handlingRoomResize={handlingRoomResize}
+            roomSize={roomSize}
+            setRoomSize={setRoomSize}
+          />
+          <LightSettings
+            handlingLightLevel={handlingLightLevel}
+            lightLevel={lightLevel}
+          />
         </section>
       )}
     </section>

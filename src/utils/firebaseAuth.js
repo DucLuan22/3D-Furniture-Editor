@@ -2,11 +2,6 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-console.log(process.env.REACT_APP_API_KEY);
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: "furniture-ecommerce-f9d5c.firebaseapp.com",
