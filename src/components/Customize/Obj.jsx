@@ -7,7 +7,15 @@ import { useThree } from "@react-three/fiber";
 import { useDispatch, useSelector } from "react-redux";
 import { removeModel, updateModelPosAndRot } from "../../slice/modelSlice";
 
-function Obj({ floorPlane, model, id, setDragging, position, rotation }) {
+function Obj({
+  floorPlane,
+  model,
+  id,
+  setDragging,
+  position,
+  rotation,
+  scale,
+}) {
   const Object = require(`../../models/${model}`).default;
   const { size, viewport } = useThree();
   const aspect = size.width / viewport.width;
@@ -20,8 +28,6 @@ function Obj({ floorPlane, model, id, setDragging, position, rotation }) {
   );
 
   let planeIntersectPoint = new THREE.Vector3();
-
-  const dragObjectRef = useRef();
 
   const [spring, api] = useSpring(() => ({
     position: pos,
@@ -65,7 +71,7 @@ function Obj({ floorPlane, model, id, setDragging, position, rotation }) {
 
   return (
     <animated.mesh {...spring} {...bind()} castShadow>
-      <Object ref={dragObjectRef} />
+      <Object scale={scale} />
     </animated.mesh>
   );
 }

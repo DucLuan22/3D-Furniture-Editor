@@ -9,10 +9,10 @@ title: chesterfield-sofa
 import React from "react";
 import { useGLTF } from "@react-three/drei";
 
-export default function Sofa(props, { ref }) {
+export default function Sofa(props) {
   const { nodes, materials } = useGLTF("./glbFile/SofaModel.glb");
   return (
-    <group {...props} dispose={null} ref={ref}>
+    <group {...props} dispose={null}>
       <group rotation={[-Math.PI / 2, 0, 0]} scale={1.28}>
         <group rotation={[Math.PI / 2, 0, 0]} scale={0.03}>
           <group scale={0.39}>
@@ -37,4 +37,4 @@ export default function Sofa(props, { ref }) {
   );
 }
 
-useGLTF.preload("/sofaModel.glb");
+useGLTF.preload("./glbFile/sofaModel.glb");

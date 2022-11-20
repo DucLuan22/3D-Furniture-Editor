@@ -11,9 +11,9 @@ function CustomizePlane() {
   const { models } = useSelector((state) => state.models);
   return (
     <>
-      <ambientLight intensity={0.5} />
+      <ambientLight intensity={1.0} />
       <directionalLight
-        intensity={0.5}
+        intensity={0.9}
         castShadow
         shadow-mapSize-height={300}
         shadow-mapSize-width={300}
@@ -54,6 +54,7 @@ function CustomizePlane() {
           setDragging={setDragging}
           position={model.position}
           rotation={model.rotation}
+          scale={model.scale}
         />
       ))}
 
