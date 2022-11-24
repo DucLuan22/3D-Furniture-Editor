@@ -6,10 +6,10 @@ import SidePanel from "../components/Customize/SidePanel";
 
 const Customization = () => {
   return (
-    <main className="w-screen h-screen scrollbar-hide overflow-clip">
+    <main className="w-screen h-screen scrollbar-hide">
       <SidePanel />
       <Canvas id="three-canvas-container" shadows>
-        <Suspense fallback={<h1>Loading profile...</h1>}>
+        <Suspense fallback={<></>}>
           <CustomizePlane />
         </Suspense>
       </Canvas>

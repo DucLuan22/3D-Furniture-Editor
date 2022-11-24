@@ -1,62 +1,83 @@
 import React, { useState } from "react";
-import { OrbitControls, OrthographicCamera, Plane } from "@react-three/drei";
+import { OrthographicCamera, Plane } from "@react-three/drei";
 import * as THREE from "three";
 import { angleToRadians } from "../../utils/angleToRadians";
 import { useSelector } from "react-redux";
+import { useTexture } from "@react-three/drei/";
 import Obj from "./Obj";
 
+import Control from "./Control";
+
 function CustomizePlane() {
-  const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+  const textureWall = useTexture("./wall-texture/White-Concrete.jpg");
+  const textureFloor = useTexture("./floor-texture/Basketball-Floor.jpg");
+  const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -0.0001);
   const [isDragging, setDragging] = useState(false);
-  const { roomSize, lightLevel } = useSelector((state) => state.environment);
+  const { roomSize, lightLevel, isGridHelper } = useSelector(
+    (state) => state.environment
+  );
   const { models } = useSelector((state) => state.models);
   return (
     <>
       <ambientLight intensity={lightLevel.ambient} />
       <directionalLight
         intensity={lightLevel.directional}
-        castShadow
-        shadow-mapSize-height={300}
-        shadow-mapSize-width={300}
+        shadow-mapSize-height={roomSize}
+        shadow-mapSize-width={roomSize}
       />
-
-      <mesh
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -0.1, 0]}
-        receiveShadow
-      ></mesh>
 
       <mesh
         position={[roomSize.x / 2, 3.5, 0]}
         rotation={[0, -angleToRadians(90), 0]}
       >
-        <Plane args={[roomSize.x, 7, 3]} />
+        <Plane args={[roomSize.x, 7, 3]}>
+          <meshStandardMaterial map={textureWall} />
+        </Plane>
       </mesh>
 
       <mesh
         position={[-roomSize.x / 2, 3.5, 0]}
         rotation={[0, angleToRadians(90), 0]}
       >
-        <Plane args={[roomSize.x, 7, 3]} />
+        <Plane args={[roomSize.x, 7, 3]}>
+          <meshStandardMaterial map={textureWall} />
+        </Plane>
       </mesh>
 
       <mesh
         position={[0, 3.5, roomSize.x / 2]}
         rotation={[0, angleToRadians(180), 0]}
       >
-        <Plane args={[roomSize.x, 7, 3]} />
+        <Plane args={[roomSize.x, 7, 3]}>
+          <meshStandardMaterial map={textureWall} />
+        </Plane>
       </mesh>
 
       <mesh
         position={[0, 3.5, -roomSize.x / 2]}
         rotation={[0, angleToRadians(0), 0]}
       >
-        <Plane args={[roomSize.x, 7, 3]} />
+        <Plane args={[roomSize.x, 7, 3]}>
+          <meshStandardMaterial map={textureWall} />
+        </Plane>
       </mesh>
 
       <planeHelper args={[floorPlane, 1, "red"]} />
 
-      <gridHelper args={[roomSize.x, roomSize.grid]} />
+      {isGridHelper && (
+        <gridHelper
+          args={[roomSize.x, roomSize.grid]}
+          add
+          position={[0, 0.001, 0]}
+        >
+          <meshStandardMaterial map={textureWall} />
+        </gridHelper>
+      )}
+      <mesh rotation={[-angleToRadians(90), 0, 0]}>
+        <Plane args={[roomSize.x, roomSize.x, 1]}>
+          <meshStandardMaterial map={textureFloor} />
+        </Plane>
+      </mesh>
 
       {models.map((model) => (
         <Obj
@@ -74,13 +95,7 @@ function CustomizePlane() {
 
       <OrthographicCamera makeDefault zoom={50} position={[0, 40, 100]} />
 
-      <OrbitControls
-        minZoom={10}
-        maxZoom={100}
-        enabled={!isDragging}
-        maxPolarAngle={angleToRadians(80)}
-        minPolarAngle={angleToRadians(30)}
-      />
+      <Control isDragging={isDragging} />
     </>
   );
 }

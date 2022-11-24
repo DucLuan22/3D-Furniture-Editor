@@ -2,7 +2,7 @@ import React from "react";
 import { Tooltip } from "flowbite-react";
 function LightSettings({ handlingLightLevel, lightLevel }) {
   return (
-    <section className="w-full ml-6 flex flex-col gap-3">
+    <section className="w-full flex flex-col gap-3">
       <span className="text-white text-lg font-semibold">Light Settings:</span>
       <article>
         <Tooltip content={lightLevel.ambient}>

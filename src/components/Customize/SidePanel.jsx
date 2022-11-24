@@ -6,9 +6,8 @@ import {
   AiOutlineArrowRight,
   AiFillDelete,
 } from "react-icons/ai";
-import { TfiSave } from "react-icons/tfi";
-import { FiRotateCcw } from "react-icons/fi";
-import { FaMousePointer } from "react-icons/fa";
+import { FiFile, FiRotateCcw, FiSave } from "react-icons/fi";
+import { FaFileExport, FaFileImport, FaMousePointer } from "react-icons/fa";
 import { BsArrowBarUp } from "react-icons/bs";
 import {
   setDeleteMode,
@@ -31,6 +30,7 @@ import { db } from "../../utils/firebaseAuth";
 import { v4 as uuidv4 } from "uuid";
 import {
   addSaveFile,
+  resetModel,
   saveDesign,
   setSaveFile,
   updateSaveFile,
@@ -39,18 +39,19 @@ import SaveFile from "./SaveFile";
 import { Tooltip } from "flowbite-react";
 import {
   setLightIntensity,
+  setResetEnvironment,
   setRoomCoordinate,
 } from "../../slice/environmentSlice";
 import GridModifier from "./GridModifier";
 import LightSettings from "./LightSettings";
-
+import { Dropdown } from "flowbite-react/lib/esm/components";
+import DropListComponent from "./DropListComponent";
 function SidePanel() {
   const [isFurniture, setIsFurniture] = useState(true);
   const [roomSize, setRoomSize] = useState({
     x: 15,
     grid: 10,
   });
-
   const [isSave, setIsSave] = useState(false);
   const [isOptions, setOptions] = useState(false);
   const [isPanel, setPanel] = useState(true);
@@ -62,9 +63,10 @@ function SidePanel() {
   const dispatch = useDispatch();
   const { isLogin, loggedUser } = useSelector((state) => state.auth);
   const modelList = useSelector((state) => state.models);
-  const { isDeleteMode, isDragMode, isRotateMode } = useSelector(
+  const { isDeleteMode, isDragMode, isRotateMode, isLiftMode } = useSelector(
     (state) => state.customize
   );
+  const environment = useSelector((state) => state.environment);
   const navigate = useNavigate();
   const openFurnitures = () => {
     setIsFurniture(true);
@@ -82,6 +84,7 @@ function SidePanel() {
     setIsSave(false);
     setOptions(true);
   };
+
   const handlingSave = async () => {
     if (!isLogin) {
       navigate("/login");
@@ -100,6 +103,10 @@ function SidePanel() {
         const saveFile = dispatch(
           saveDesign({
             models: [...modelList.models],
+            environment: {
+              roomSize: environment.roomSize,
+              lightLevel: environment.lightLevel,
+            },
             id: modelList.loadedDesign.id,
           })
         ).payload;
@@ -122,6 +129,10 @@ function SidePanel() {
       const savedFile = dispatch(
         saveDesign({
           models: [...modelList.models],
+          environment: {
+            roomSize: environment.roomSize,
+            lightLevel: environment.lightLevel,
+          },
           id: uuidv4(),
         })
       ).payload;
@@ -158,7 +169,7 @@ function SidePanel() {
     };
     getModels();
     getSavedFiles();
-  }, [loggedUser.uid]);
+  }, [loggedUser.uid, dispatch]);
 
   const handlingRoomResize = (e) => {
     const { value, name } = e.target;
@@ -177,6 +188,12 @@ function SidePanel() {
     }));
     dispatch(setLightIntensity(lightLevel));
   };
+  const handlingNewDesign = () => {
+    if (window.confirm("Do you want to create a new design?")) {
+      dispatch(resetModel());
+      dispatch(setResetEnvironment());
+    }
+  };
   return (
     <section
       className={`bg-gray-700 opacity-90 absolute z-50 float-left transition-all duration-300 h-full overflow-y-auto scrollbar-hide ${
@@ -193,13 +210,36 @@ function SidePanel() {
 
       {isPanel && (
         <div>
-          <span className="p-2 bg-white absolute translate-x-2 rounded-full -translate-y-2">
+          <section className="flex items-center justify-center flex-wrap px-2">
+            <span className="text-white font-bold mr-auto">
+              {/* <TfiSave className="text-3xl" onClick={handlingSave} /> */}
+              <Dropdown label="Options" inline={true}>
+                <Dropdown.Item onClick={handlingNewDesign}>
+                  <FiFile className="mr-1" />
+                  <p>New Design</p>
+                </Dropdown.Item>
+                <Dropdown.Item onClick={handlingSave}>
+                  <FiSave className="mr-1" />
+                  <p>Save Design</p>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <FaFileImport className="mr-1" />
+                  <p>Import</p>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <FaFileExport className="mr-1" />
+                  <p>Export</p>
+                </Dropdown.Item>
+              </Dropdown>
+            </span>
+            <h1 className="text-white text-3xl font-semibold text-center my-3 mr-[43%]">
+              Menu
+            </h1>
+          </section>
+          {/* <span className="p-2 bg-white absolute rounded-full -translate-y-2">
             <TfiSave className="text-3xl" onClick={handlingSave} />
-          </span>
+          </span> */}
 
-          <h1 className="text-white text-3xl font-semibold text-center my-3">
-            Customization Menu
-          </h1>
           <hr />
           <section className="flex justify-evenly text-2xl font-semibold">
             <button
@@ -257,7 +297,7 @@ function SidePanel() {
             </span>
             <span
               className={`text-3xl bg-gray-800  hover:bg-slate-600 p-2 text-white rounded-full ${
-                isRotateMode && "bg-slate-600"
+                isLiftMode && "bg-slate-600"
               }`}
             >
               <Tooltip content="Lift Mode">
@@ -283,21 +323,25 @@ function SidePanel() {
         <section className={`flex  flex-col gap-9 ${!isPanel && "hidden"}`}>
           {modelList &&
             modelList.saveFileList.map((save, index) => (
-              <SaveFile data={save} index={index} />
+              <span key={save.id}>
+                <SaveFile data={save} index={index} key={save.id} />
+              </span>
             ))}
         </section>
       )}
       {isOptions && (
-        <section className={`flex flex-col gap-9 ${!isPanel && "hidden"}`}>
+        <section className={`flex flex-col gap-5 ${!isPanel && "hidden"} mx-6`}>
           <GridModifier
             handlingRoomResize={handlingRoomResize}
-            roomSize={roomSize}
+            roomSize={environment.roomSize}
             setRoomSize={setRoomSize}
           />
           <LightSettings
             handlingLightLevel={handlingLightLevel}
-            lightLevel={lightLevel}
+            lightLevel={environment.lightLevel}
           />
+          <DropListComponent label={"Select Wall"} title={"Wall type: "} />
+          <DropListComponent label={"Select Floor"} title={"Floor type: "} />
         </section>
       )}
     </section>

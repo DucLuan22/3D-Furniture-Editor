@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useDrag } from "@use-gesture/react";
 import { animated, useSpring } from "@react-spring/three";
 
@@ -20,46 +20,57 @@ function Obj({
   const { size, viewport } = useThree();
   const aspect = size.width / viewport.width;
   const [movement, setMovement] = useState();
+  const [xValue, setX] = useState(0);
+  const [yValue, setY] = useState(0);
+  const [zValue, setZ] = useState(0);
   const [pos, setPos] = useState(position);
   const [rot, setRot] = useState(rotation);
   const dispatch = useDispatch();
   const { isDeleteMode, isDragMode, isRotateMode, isLiftMode } = useSelector(
     (state) => state.customize
   );
-
+  const { roomSize } = useSelector((state) => state.environment);
   let planeIntersectPoint = new THREE.Vector3();
 
   const [spring, api] = useSpring(() => ({
     position: pos,
     scale: 1,
     rotation: rot,
-    config: { friction: 20 },
+    config: { friction: 19 },
   }));
 
   const bind = useDrag(
     ({ active, timeStamp, event, movement: [x, y] }) => {
       if (active && isDragMode) {
         event.ray.intersectPlane(floorPlane, planeIntersectPoint);
-        setPos([planeIntersectPoint.x, 0, planeIntersectPoint.z]);
-        api.start({
-          // position: active ? [x / aspect, -y / aspect, 0] : [0, 0, 0],
-          position: pos,
-          scale: 1,
-          // rotation: [0, x / aspect, 0],
-        });
+        if (
+          Math.abs(xValue) >= roomSize.x / 2 - scale - 0.05 ||
+          Math.abs(zValue) >= roomSize.x / 2 - scale + 0.4
+        ) {
+          setPos([planeIntersectPoint.x, yValue, planeIntersectPoint.z]);
+        } else {
+          setPos([planeIntersectPoint.x, yValue, planeIntersectPoint.z]);
+          api.start({
+            position: pos,
+            scale: 1,
+          });
+        }
+
+        setX(planeIntersectPoint.x);
+        setZ(planeIntersectPoint.z);
       }
 
-      // if (active && isLiftMode) {
-      //   event.ray.intersectPlane(floorPlane, planeIntersectPoint);
-      //   setPos([planeIntersectPoint.x, 0, planeIntersectPoint.z]);
-      //   api.start({
-      //     // position: active ? [x / aspect, -y / aspect, 0] : [0, 0, 0],
-      //     position: pos,
-      //     scale: 1,
-      //     // rotation: [0, x / aspect, 0],
-      //   });
-      //   console.log(planeIntersectPoint);
-      // }
+      if (active && isLiftMode) {
+        if (-y / aspect >= 0) {
+          event.ray.intersectPlane(floorPlane, planeIntersectPoint);
+          setPos([xValue, -y / aspect, zValue]);
+          api.start({
+            position: pos,
+            scale: 1,
+          });
+          setY(-y / aspect);
+        }
+      }
 
       if (active && isRotateMode) {
         setMovement(x);
@@ -84,7 +95,7 @@ function Obj({
 
   return (
     <animated.mesh {...spring} {...bind()} castShadow>
-      <Object scale={scale} recieveShadow />
+      <Object scale={scale} />
     </animated.mesh>
   );
 }

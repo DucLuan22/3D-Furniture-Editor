@@ -57,6 +57,11 @@ export const modelSlice = createSlice({
         (save) => save.id !== data.payload.id
       );
     },
+    resetModel: (state) => {
+      state.isLoaded = false;
+      state.loadedDesign = {};
+      state.models = [];
+    },
   },
 });
 
@@ -71,6 +76,7 @@ export const {
   setModel,
   removeSaveFile,
   unLoadSaveFile,
+  resetModel,
 } = modelSlice.actions;
 
 export default modelSlice.reducer;
