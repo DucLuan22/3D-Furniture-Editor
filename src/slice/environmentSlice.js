@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  floorTypes: [],
+  wallTypes: [],
   roomSize: {
     x: 15,
     grid: 10,
@@ -10,6 +12,8 @@ const initialState = {
     directional: 1,
   },
   isGridHelper: false,
+  floorType: null,
+  wallType: null,
 };
 
 const environmentSlice = createSlice({
@@ -35,6 +39,12 @@ const environmentSlice = createSlice({
     setGridHelper: (state, data) => {
       state.isGridHelper = data.payload;
     },
+    setFloorType: (state, data) => {
+      state.floorType = data.payload;
+    },
+    setWallType: (state, data) => {
+      state.wallType = data.payload;
+    },
   },
 });
 
@@ -43,6 +53,8 @@ export const {
   setLightIntensity,
   setResetEnvironment,
   setGridHelper,
+  setFloorType,
+  setWallType,
 } = environmentSlice.actions;
 
 export default environmentSlice.reducer;

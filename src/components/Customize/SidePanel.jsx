@@ -38,9 +38,11 @@ import {
 import SaveFile from "./SaveFile";
 import { Tooltip } from "flowbite-react";
 import {
+  setFloorType,
   setLightIntensity,
   setResetEnvironment,
   setRoomCoordinate,
+  setWallType,
 } from "../../slice/environmentSlice";
 import GridModifier from "./GridModifier";
 import LightSettings from "./LightSettings";
@@ -340,8 +342,18 @@ function SidePanel() {
             handlingLightLevel={handlingLightLevel}
             lightLevel={environment.lightLevel}
           />
-          <DropListComponent label={"Select Wall"} title={"Wall type: "} />
-          <DropListComponent label={"Select Floor"} title={"Floor type: "} />
+          <DropListComponent
+            label={"Select Wall"}
+            title={"Wall type: "}
+            dbName="wall"
+            setData={setWallType}
+          />
+          <DropListComponent
+            label={"Select Floor"}
+            title={"Floor type: "}
+            dbName="floor"
+            setData={setFloorType}
+          />
         </section>
       )}
     </section>

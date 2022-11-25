@@ -9,8 +9,11 @@ import Obj from "./Obj";
 import Control from "./Control";
 
 function CustomizePlane() {
-  const textureWall = useTexture("./wall-texture/White-Concrete.jpg");
-  const textureFloor = useTexture("./floor-texture/Basketball-Floor.jpg");
+  const { floorType, wallType } = useSelector((state) => state.environment);
+  const textureWall = useTexture(
+    `./wall-texture/${wallType ? wallType : "Default"}.jpg`
+  );
+  const textureFloor = useTexture("./floor-texture/Basketball Floor.jpg");
   const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -0.0001);
   const [isDragging, setDragging] = useState(false);
   const { roomSize, lightLevel, isGridHelper } = useSelector(
@@ -31,7 +34,7 @@ function CustomizePlane() {
         rotation={[0, -angleToRadians(90), 0]}
       >
         <Plane args={[roomSize.x, 7, 3]}>
-          <meshStandardMaterial map={textureWall} />
+          {<meshStandardMaterial map={textureWall} />}
         </Plane>
       </mesh>
 
@@ -40,7 +43,7 @@ function CustomizePlane() {
         rotation={[0, angleToRadians(90), 0]}
       >
         <Plane args={[roomSize.x, 7, 3]}>
-          <meshStandardMaterial map={textureWall} />
+          {<meshStandardMaterial map={textureWall} />}
         </Plane>
       </mesh>
 
@@ -58,7 +61,7 @@ function CustomizePlane() {
         rotation={[0, angleToRadians(0), 0]}
       >
         <Plane args={[roomSize.x, 7, 3]}>
-          <meshStandardMaterial map={textureWall} />
+          {<meshStandardMaterial map={textureWall} />}
         </Plane>
       </mesh>
 
@@ -70,12 +73,12 @@ function CustomizePlane() {
           add
           position={[0, 0.001, 0]}
         >
-          <meshStandardMaterial map={textureWall} />
+          {<meshStandardMaterial map={textureWall} />}
         </gridHelper>
       )}
       <mesh rotation={[-angleToRadians(90), 0, 0]}>
         <Plane args={[roomSize.x, roomSize.x, 1]}>
-          <meshStandardMaterial map={textureFloor} />
+          {<meshStandardMaterial map={textureFloor} />}
         </Plane>
       </mesh>
 
