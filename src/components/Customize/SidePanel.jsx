@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -32,6 +32,7 @@ import {
   addSaveFile,
   resetModel,
   saveDesign,
+  setModel,
   setSaveFile,
   updateSaveFile,
 } from "../../slice/modelSlice";
@@ -49,6 +50,7 @@ import LightSettings from "./LightSettings";
 import { Dropdown } from "flowbite-react/lib/esm/components";
 import DropListComponent from "./DropListComponent";
 function SidePanel() {
+  const inputFile = useRef(null);
   const [isFurniture, setIsFurniture] = useState(true);
   const [roomSize, setRoomSize] = useState({
     x: 15,
@@ -108,6 +110,8 @@ function SidePanel() {
             environment: {
               roomSize: environment.roomSize,
               lightLevel: environment.lightLevel,
+              floorType: environment.floorType,
+              wallType: environment.wallType,
             },
             id: modelList.loadedDesign.id,
           })
@@ -134,6 +138,8 @@ function SidePanel() {
           environment: {
             roomSize: environment.roomSize,
             lightLevel: environment.lightLevel,
+            floorType: environment.floorType,
+            wallType: environment.wallType,
           },
           id: uuidv4(),
         })
@@ -196,6 +202,46 @@ function SidePanel() {
       dispatch(setResetEnvironment());
     }
   };
+
+  const handlingExport = () => {
+    if (modelList.models.length > 0) {
+      const link = document.createElement("a");
+      const file = new Blob(
+        [
+          JSON.stringify({
+            models: modelList.models,
+            roomSize: environment.roomSize,
+            lightLevel: environment.lightLevel,
+            floorType: environment.floorType,
+            wallType: environment.wallType,
+          }),
+        ],
+        {
+          type: "text/plain;charset=utf-8",
+        }
+      );
+
+      const url = URL.createObjectURL(file);
+      link.download = "Export-Design.txt";
+      link.href = url;
+      link.click();
+    }
+  };
+  const handlingImport = (e) => {
+    const file = e.target.files[0];
+    let reader = new FileReader();
+    if (file) {
+      reader.readAsText(file);
+      reader.onload = function () {
+        const data = JSON.parse(reader.result);
+        dispatch(setModel(data.models));
+        dispatch(setFloorType(data.floorType));
+        dispatch(setWallType(data.wallType));
+        dispatch(setRoomCoordinate(data.roomSize));
+        dispatch(setLightIntensity(data.lightLevel));
+      };
+    }
+  };
   return (
     <section
       className={`bg-gray-700 opacity-90 absolute z-50 float-left transition-all duration-300 h-full overflow-y-auto scrollbar-hide ${
@@ -224,11 +270,18 @@ function SidePanel() {
                   <FiSave className="mr-1" />
                   <p>Save Design</p>
                 </Dropdown.Item>
-                <Dropdown.Item>
+                <Dropdown.Item onClick={() => inputFile.current.click()}>
                   <FaFileImport className="mr-1" />
                   <p>Import</p>
+                  <input
+                    type="file"
+                    id="file"
+                    ref={inputFile}
+                    style={{ display: "none" }}
+                    onChange={handlingImport}
+                  />
                 </Dropdown.Item>
-                <Dropdown.Item>
+                <Dropdown.Item onClick={handlingExport}>
                   <FaFileExport className="mr-1" />
                   <p>Export</p>
                 </Dropdown.Item>

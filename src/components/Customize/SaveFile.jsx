@@ -18,36 +18,39 @@ import {
 } from "firebase/firestore";
 import { db } from "../../utils/firebaseAuth";
 import {
+  setFloorType,
   setLightIntensity,
   setResetEnvironment,
   setRoomCoordinate,
+  setWallType,
 } from "../../slice/environmentSlice";
 function SaveFile({ data, index, key }) {
   const dispatch = useDispatch();
-  const { loadedDesign } = useSelector((state) => state.models);
+  const { loadedDesign, isLoaded } = useSelector((state) => state.models);
   const { loggedUser } = useSelector((state) => state.auth);
-  console.log(data);
   const handlingLoadingSaveFile = () => {
     if (window.confirm(`Do you want to load save file ${index}`)) {
       dispatch(setModel(data.models));
       dispatch(saveDesign(data));
       dispatch(setLightIntensity(data.environment.lightLevel));
       dispatch(setRoomCoordinate(data.environment.roomSize));
+      dispatch(setWallType(data.environment.wallType));
+      dispatch(setFloorType(data.environment.floorType));
     }
   };
   const deleteSavefile = async () => {
     if (window.confirm(`Do you want to load delete file ${index}`)) {
       const queryData = query(
         collection(db, "users"),
-        where("uid", "==", loggedUser?.uid)
+        where("uid", "==", loggedUser.uid)
       );
       const user_id = (await getDocs(queryData)).docs.map((doc) => doc.id);
       const docRef = doc(db, "users", user_id[0]);
 
-      dispatch(setModel([]));
       dispatch(removeSaveFile(data));
-      if (loadedDesign.id === data?.id) {
+      if (loadedDesign.id === data?.id && isLoaded == true) {
         dispatch(unLoadSaveFile());
+        dispatch(setModel([]));
         dispatch(setResetEnvironment());
       }
       await updateDoc(docRef, {

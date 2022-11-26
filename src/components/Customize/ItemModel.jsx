@@ -2,7 +2,6 @@ import React, { Suspense, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { addModel } from "../../slice/modelSlice";
 import { angleToRadians } from "../../utils/angleToRadians";
-import { Html } from "@react-three/drei";
 import Loader from "./Loader";
 
 function ItemModel({ model }) {

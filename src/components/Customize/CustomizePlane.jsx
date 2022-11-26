@@ -13,7 +13,9 @@ function CustomizePlane() {
   const textureWall = useTexture(
     `./wall-texture/${wallType ? wallType : "Default"}.jpg`
   );
-  const textureFloor = useTexture("./floor-texture/Basketball Floor.jpg");
+  const textureFloor = useTexture(
+    `./floor-texture/${floorType ? floorType : "Default"}.jpg`
+  );
   const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -0.0001);
   const [isDragging, setDragging] = useState(false);
   const { roomSize, lightLevel, isGridHelper } = useSelector(

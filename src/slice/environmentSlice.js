@@ -35,6 +35,8 @@ const environmentSlice = createSlice({
         ambient: 1,
         directional: 1,
       };
+      state.floorType = null;
+      state.wallType = null;
     },
     setGridHelper: (state, data) => {
       state.isGridHelper = data.payload;
