@@ -26,7 +26,7 @@ function ItemModel({ model }) {
           )
         }
       >
-        <Model scale={1.8} />
+        <Model scale={model.menu_scale} />
       </mesh>
       <ambientLight args={["#FFFFFF", 0.25]} />
       <spotLight

@@ -315,7 +315,7 @@ function SidePanel() {
               className="py-2 w-full hover:bg-slate-200 cursor-pointer hover:opacity-70"
               onClick={openOptions}
             >
-              Options
+              Extra Settings
             </button>
           </section>
           <hr />

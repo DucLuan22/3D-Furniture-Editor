@@ -44,8 +44,8 @@ function Obj({
       if (active && isDragMode) {
         event.ray.intersectPlane(floorPlane, planeIntersectPoint);
         if (
-          Math.abs(xValue) >= roomSize.x / 2 - scale - 0.05 ||
-          Math.abs(zValue) >= roomSize.x / 2 - scale + 0.4
+          Math.abs(xValue) >= roomSize.x / 2 - scale + 0.8 ||
+          Math.abs(zValue) >= roomSize.x / 2 - scale + 1.5
         ) {
           setPos([planeIntersectPoint.x, yValue, planeIntersectPoint.z]);
         } else {
