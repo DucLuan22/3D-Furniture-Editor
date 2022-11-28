@@ -9,7 +9,7 @@ title: Simple Tall Shelf
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
-export default function simple_tall_shelf(props) {
+export default function Simple_tall_shelf(props) {
   const { nodes, materials } = useGLTF('./glbFile/simple_tall_shelf.glb')
   return (
     <group {...props} dispose={null}>

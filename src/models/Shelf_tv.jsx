@@ -9,7 +9,7 @@ title: TV UNIT | FURNITURE
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
-export default function shelf_tv(props) {
+export default function Shelftv(props) {
   const { nodes, materials } = useGLTF('./glbFile/shelf_tv.glb')
   return (
     <group {...props} dispose={null}>

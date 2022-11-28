@@ -9,7 +9,7 @@ title: furniture module BV183_1
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
-export default function shelf_TV1(props) {
+export default function Shelf_TV1(props) {
   const { nodes, materials } = useGLTF('./glbFile/shelf_TV1.glb')
   return (
     <group {...props} dispose={null}>

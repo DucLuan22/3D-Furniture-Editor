@@ -9,7 +9,7 @@ title: TV Unit - JACKDAW
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
-export default function shelf_TV2(props) {
+export default function Shelf_TV2(props) {
   const { nodes, materials } = useGLTF('./glbFile/shelf_TV2.glb')
   return (
     <group {...props} dispose={null}>

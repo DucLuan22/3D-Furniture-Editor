@@ -9,7 +9,7 @@ title: JL - Chair
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
-export default function chair_black_single(props) {
+export default function Chair_black_single(props) {
   const { nodes, materials } = useGLTF('./glbFile/chair_black_single.glb')
   return (
     <group {...props} dispose={null}>
