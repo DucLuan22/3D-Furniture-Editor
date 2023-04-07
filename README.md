@@ -1,3 +1,27 @@
+# 3D Furniture Editor
+
+This website is an 3D furniture editor web app that uses the popular web-based graphics library, Three.js, along with the React JavaScript library for building user interfaces. With this editor, users can create and customize furniture designs in a 3D space, experimenting with different styles, colors, and configurations to suit their needs. The editor offers a user-friendly interface that allows users to interact with their designs in real-time, manipulating objects and viewing changes from any angle.
+
+
+
+
+## Features
+
+- Creating and customizing furniture designs in a 3D space
+- Changing surrounding environment such as floors, walls and lighting 
+- Save and export designs via Firebase
+- Login and Authentication using Firebase
+
+
+## Demo
+**1. Place**
+![](https://cdn.discordapp.com/attachments/518782950129795073/1093759124329726023/ezgif.com-gif-maker_1.gif)
+**2. Drag Mode**
+![](https://cdn.discordapp.com/attachments/518782950129795073/1093759123969036338/ezgif.com-gif-maker_2.gif)
+**3. Delete Mode**
+![](https://media.discordapp.net/attachments/518782950129795073/1093759123490873414/ezgif.com-gif-maker_3.gif)
+**4. Rotate Mode**
+![](https://cdn.discordapp.com/attachments/518782950129795073/1093759124765941782/ezgif.com-gif-maker.gif)
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
