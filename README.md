@@ -14,13 +14,13 @@ This website is an 3D furniture editor web app that uses the popular web-based g
 
 
 ## Demo
-**1. Place**
+### 1. Place
 ![](https://cdn.discordapp.com/attachments/518782950129795073/1093759124329726023/ezgif.com-gif-maker_1.gif)
-**2. Drag Mode**
+### 2. Drag Mode
 ![](https://cdn.discordapp.com/attachments/518782950129795073/1093759123969036338/ezgif.com-gif-maker_2.gif)
-**3. Delete Mode**
+### 3. Delete Mode 
 ![](https://media.discordapp.net/attachments/518782950129795073/1093759123490873414/ezgif.com-gif-maker_3.gif)
-**4. Rotate Mode**
+### 4. Rotate Mode
 ![](https://cdn.discordapp.com/attachments/518782950129795073/1093759124765941782/ezgif.com-gif-maker.gif)
 
 # Getting Started with Create React App
